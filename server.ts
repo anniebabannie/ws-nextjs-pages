@@ -21,15 +21,13 @@ nextApp.prepare().then(() => {
   
     ws.on('message', (message, isBinary) => {
       console.log(`Received message: ${message}`);
-      // Echo the message back to the client
-      // ws.send(`Echo: ${message}`);
       clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
+        if (client.readyState === WebSocket.OPEN && (message.toString() !== `{"event":"ping"}`)) {
           client.send(message, { binary: isBinary });
         }
       });
     });
-  
+    
     ws.on('close', () => {
       clients.delete(ws);
       console.log('Client disconnected');

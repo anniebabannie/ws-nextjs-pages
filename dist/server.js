@@ -26874,7 +26874,7 @@ nextApp.prepare().then(() => {
     ws.on("message", (message, isBinary) => {
       console.log(`Received message: ${message}`);
       clients.forEach((client) => {
-        if (client.readyState === wrapper_default.OPEN) {
+        if (client.readyState === wrapper_default.OPEN && message.toString() !== `{"event":"ping"}`) {
           client.send(message, { binary: isBinary });
         }
       });

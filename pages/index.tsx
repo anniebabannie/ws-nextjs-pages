@@ -48,6 +48,7 @@ const Index = () => {
       {/* <form onSubmit={sendMessage}> */}
         <input
           type="text"
+          className="border border-gray-400 rounded p-2"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
         />
