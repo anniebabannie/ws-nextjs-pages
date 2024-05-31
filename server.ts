@@ -8,22 +8,30 @@ const app = express();
 const server: Server = app.listen(3000);
 const wss = new WebSocketServer({ noServer: true });
 const nextApp = next({ dev: process.env.NODE_ENV !== "production" });
+const clients = new Set<WebSocket>();
 
 nextApp.prepare().then(() => {
   app.use((req, res, next) => {
     nextApp.getRequestHandler()(req, res, parse(req.url, true));
   });
-  
+
   wss.on('connection', (ws) => {
+    clients.add(ws);
     console.log('New client connected');
   
-    ws.on('message', (message) => {
+    ws.on('message', (message, isBinary) => {
       console.log(`Received message: ${message}`);
       // Echo the message back to the client
-      ws.send(`Echo: ${message}`);
+      // ws.send(`Echo: ${message}`);
+      clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(message, { binary: isBinary });
+        }
+      });
     });
   
     ws.on('close', () => {
+      clients.delete(ws);
       console.log('Client disconnected');
     });
   });

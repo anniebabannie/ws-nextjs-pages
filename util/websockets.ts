@@ -30,26 +30,7 @@ export function handleUpgrade(
 ) {
   wss.handleUpgrade(req, socket, head, (client: WebSocket) => {
     wss.emit('connection', client, req);
-    // clients.add(client);
-    // console.log('Client connected');
 
-    // // Broadcast messages to all connected clients
-    // client.on('message', (message: RawData) => {
-    //   console.log('received: %s', message);
-    //   console.log(message)
-    //   client.send(message);
-    //   for (const otherClient of clients) {
-    //     otherClient.send(message);
-    //     if (otherClient.readyState === WebSocket.OPEN) {
-    //     }
-    //   }
-    // });
-
-    // // Remove the client from the set when it disconnects
-    // client.on('close', () => {
-    //   clients.delete(client);
-    //   console.log('Client disconnected');
-    // });
   });
 }
 

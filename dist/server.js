@@ -25591,7 +25591,7 @@ var require_websocket = __commonJS({
     var protocolVersions = [8, 13];
     var readyStates = ["CONNECTING", "OPEN", "CLOSING", "CLOSED"];
     var subprotocolRegex = /^[!#$%&'*+\-.0-9A-Z^_`|a-z~]+$/;
-    var WebSocket3 = class _WebSocket extends EventEmitter {
+    var WebSocket2 = class _WebSocket extends EventEmitter {
       /**
        * Create a new `WebSocket`.
        *
@@ -25960,35 +25960,35 @@ var require_websocket = __commonJS({
         }
       }
     };
-    Object.defineProperty(WebSocket3, "CONNECTING", {
+    Object.defineProperty(WebSocket2, "CONNECTING", {
       enumerable: true,
       value: readyStates.indexOf("CONNECTING")
     });
-    Object.defineProperty(WebSocket3.prototype, "CONNECTING", {
+    Object.defineProperty(WebSocket2.prototype, "CONNECTING", {
       enumerable: true,
       value: readyStates.indexOf("CONNECTING")
     });
-    Object.defineProperty(WebSocket3, "OPEN", {
+    Object.defineProperty(WebSocket2, "OPEN", {
       enumerable: true,
       value: readyStates.indexOf("OPEN")
     });
-    Object.defineProperty(WebSocket3.prototype, "OPEN", {
+    Object.defineProperty(WebSocket2.prototype, "OPEN", {
       enumerable: true,
       value: readyStates.indexOf("OPEN")
     });
-    Object.defineProperty(WebSocket3, "CLOSING", {
+    Object.defineProperty(WebSocket2, "CLOSING", {
       enumerable: true,
       value: readyStates.indexOf("CLOSING")
     });
-    Object.defineProperty(WebSocket3.prototype, "CLOSING", {
+    Object.defineProperty(WebSocket2.prototype, "CLOSING", {
       enumerable: true,
       value: readyStates.indexOf("CLOSING")
     });
-    Object.defineProperty(WebSocket3, "CLOSED", {
+    Object.defineProperty(WebSocket2, "CLOSED", {
       enumerable: true,
       value: readyStates.indexOf("CLOSED")
     });
-    Object.defineProperty(WebSocket3.prototype, "CLOSED", {
+    Object.defineProperty(WebSocket2.prototype, "CLOSED", {
       enumerable: true,
       value: readyStates.indexOf("CLOSED")
     });
@@ -26001,10 +26001,10 @@ var require_websocket = __commonJS({
       "readyState",
       "url"
     ].forEach((property) => {
-      Object.defineProperty(WebSocket3.prototype, property, { enumerable: true });
+      Object.defineProperty(WebSocket2.prototype, property, { enumerable: true });
     });
     ["open", "error", "close", "message"].forEach((method) => {
-      Object.defineProperty(WebSocket3.prototype, `on${method}`, {
+      Object.defineProperty(WebSocket2.prototype, `on${method}`, {
         enumerable: true,
         get() {
           for (const listener of this.listeners(method)) {
@@ -26026,9 +26026,9 @@ var require_websocket = __commonJS({
         }
       });
     });
-    WebSocket3.prototype.addEventListener = addEventListener;
-    WebSocket3.prototype.removeEventListener = removeEventListener;
-    module2.exports = WebSocket3;
+    WebSocket2.prototype.addEventListener = addEventListener;
+    WebSocket2.prototype.removeEventListener = removeEventListener;
+    module2.exports = WebSocket2;
     function initAsClient(websocket, address, protocols, options) {
       const opts = {
         allowSynchronousEvents: true,
@@ -26214,7 +26214,7 @@ var require_websocket = __commonJS({
       });
       req.on("upgrade", (res, socket, head) => {
         websocket.emit("upgrade", res);
-        if (websocket.readyState !== WebSocket3.CONNECTING) return;
+        if (websocket.readyState !== WebSocket2.CONNECTING) return;
         req = websocket._req = null;
         if (res.headers.upgrade.toLowerCase() !== "websocket") {
           abortHandshake(websocket, socket, "Invalid Upgrade header");
@@ -26285,7 +26285,7 @@ var require_websocket = __commonJS({
       }
     }
     function emitErrorAndClose(websocket, err) {
-      websocket._readyState = WebSocket3.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       websocket.emit("error", err);
       websocket.emitClose();
     }
@@ -26301,7 +26301,7 @@ var require_websocket = __commonJS({
       return tls.connect(options);
     }
     function abortHandshake(websocket, stream, message) {
-      websocket._readyState = WebSocket3.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       const err = new Error(message);
       Error.captureStackTrace(err, abortHandshake);
       if (stream.setHeader) {
@@ -26376,7 +26376,7 @@ var require_websocket = __commonJS({
       this.removeListener("close", socketOnClose);
       this.removeListener("data", socketOnData);
       this.removeListener("end", socketOnEnd);
-      websocket._readyState = WebSocket3.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       let chunk;
       if (!this._readableState.endEmitted && !websocket._closeFrameReceived && !websocket._receiver._writableState.errorEmitted && (chunk = websocket._socket.read()) !== null) {
         websocket._receiver.write(chunk);
@@ -26398,7 +26398,7 @@ var require_websocket = __commonJS({
     }
     function socketOnEnd() {
       const websocket = this[kWebSocket];
-      websocket._readyState = WebSocket3.CLOSING;
+      websocket._readyState = WebSocket2.CLOSING;
       websocket._receiver.end();
       this.end();
     }
@@ -26407,7 +26407,7 @@ var require_websocket = __commonJS({
       this.removeListener("error", socketOnError);
       this.on("error", NOOP);
       if (websocket) {
-        websocket._readyState = WebSocket3.CLOSING;
+        websocket._readyState = WebSocket2.CLOSING;
         this.destroy();
       }
     }
@@ -26470,7 +26470,7 @@ var require_websocket_server = __commonJS({
     var extension = require_extension();
     var PerMessageDeflate = require_permessage_deflate();
     var subprotocol = require_subprotocol();
-    var WebSocket3 = require_websocket();
+    var WebSocket2 = require_websocket();
     var { GUID, kWebSocket } = require_constants();
     var keyRegex = /^[+/0-9A-Za-z]{22}==$/;
     var RUNNING = 0;
@@ -26526,7 +26526,7 @@ var require_websocket_server = __commonJS({
           host: null,
           path: null,
           port: null,
-          WebSocket: WebSocket3,
+          WebSocket: WebSocket2,
           ...options
         };
         if (options.port == null && !options.server && !options.noServer || options.port != null && (options.server || options.noServer) || options.server && options.noServer) {
@@ -26856,23 +26856,31 @@ var import_receiver = __toESM(require_receiver(), 1);
 var import_sender = __toESM(require_sender(), 1);
 var import_websocket = __toESM(require_websocket(), 1);
 var import_websocket_server = __toESM(require_websocket_server(), 1);
+var wrapper_default = import_websocket.default;
 
 // server.ts
 var app = (0, import_express.default)();
 var server = app.listen(3e3);
 var wss = new import_websocket_server.default({ noServer: true });
 var nextApp = (0, import_next.default)({ dev: process.env.NODE_ENV !== "production" });
+var clients = /* @__PURE__ */ new Set();
 nextApp.prepare().then(() => {
   app.use((req, res, next2) => {
     nextApp.getRequestHandler()(req, res, (0, import_url.parse)(req.url, true));
   });
   wss.on("connection", (ws) => {
+    clients.add(ws);
     console.log("New client connected");
-    ws.on("message", (message) => {
+    ws.on("message", (message, isBinary) => {
       console.log(`Received message: ${message}`);
-      ws.send(`Echo: ${message}`);
+      clients.forEach((client) => {
+        if (client.readyState === wrapper_default.OPEN) {
+          client.send(message, { binary: isBinary });
+        }
+      });
     });
     ws.on("close", () => {
+      clients.delete(ws);
       console.log("Client disconnected");
     });
   });
